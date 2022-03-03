@@ -2,13 +2,14 @@ package com.example.ellina.project.models;
 
 import com.example.ellina.project.entity.CategoryEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Category {
     private Long id;
     private String categoryName;
-    private List<Post> posts;
+    private List<Product> products;
 
     public Category() {
 
@@ -18,7 +19,13 @@ public class Category {
         Category category = new Category();
         category.setId(entity.getId());
         category.setCategoryName(entity.getCategoryName());
-        category.setPosts(entity.getPostEntities().stream().map(Post::toModel).collect(Collectors.toList()));
+        if (entity.getProductEntities() == null) {
+            List<Product> products = new ArrayList<>();
+            category.setProducts(products);
+        } else {
+            category.setProducts(entity.getProductEntities().stream().map(Product::toModel).collect(Collectors.toList()));
+        }
+
         return category;
     }
 
@@ -38,11 +45,11 @@ public class Category {
         this.categoryName = categoryName;
     }
 
-    public List<Post> getPosts() {
-        return posts;
+    public List<Product> getProducts() {
+        return products;
     }
 
-    public void setPosts(List<Post> posts) {
-        this.posts = posts;
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 }

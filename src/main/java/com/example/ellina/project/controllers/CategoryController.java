@@ -1,6 +1,7 @@
 package com.example.ellina.project.controllers;
 
 import com.example.ellina.project.entity.CategoryEntity;
+import com.example.ellina.project.exceptions.CategoryAlreadyExists;
 import com.example.ellina.project.exceptions.CategoryNotFound;
 import com.example.ellina.project.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +26,14 @@ public class CategoryController {
     public ResponseEntity createCategory(@RequestBody CategoryEntity category) {
         try {
             return ResponseEntity.ok(categoryService.createCategory(category));
+        } catch (CategoryAlreadyExists e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error occurred");
         }
-
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity updateCategoryName(@PathVariable Long id, @RequestParam String name) {
         try {
             return ResponseEntity.ok(categoryService.updateCategory(id, name));
@@ -65,7 +67,7 @@ public class CategoryController {
     @DeleteMapping("/{id}")
     public ResponseEntity deleteCategory(@PathVariable Long id) {
         try {
-            return ResponseEntity.ok(categoryService.deletePost(id));
+            return ResponseEntity.ok(categoryService.deleteCategory(id));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error occurred");
         }
